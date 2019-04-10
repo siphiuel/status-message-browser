@@ -17,22 +17,26 @@
   [:div {:style {:background-color "#dddddd"
                  :margin-bottom 4
                  :border-radius 4}
-         :on-click #(rf/dispatch [:show-contact (:name f)])}
+         :on-click #(rf/dispatch [:show-contact (:hash f)])}
    (:name f)])
 
 (defn profile-info []
   (let [info @(rf/subscribe [:profile-info])]
-    [:div {:style {:border-width "1px" :border-color "black"}}
-     "Profile "
+    [:div {:style {:display :flex 
+                   :flex-direction :column 
+                   :border-width "1px" 
+                   :border-color "black"}}
+     "Profile name: "
      (:name info)
-     [:div
-      "Following"]
-     [:div
-      {:style {:display :flex
-               :flex-direction :column
-               }}
-      (for [f (:following info)]
-        ^{:key f} [following-item f])]
+     [:div {:style {:display :flex :flex-direction :column :border-width 2}}
+      [:div
+       "Following"]
+      [:div
+       {:style {:display :flex
+                :flex-direction :column
+                }}
+       (for [f (:following info)]
+         ^{:key f} [following-item f])]]
      ]))
 
 (defn top-bar []
@@ -41,6 +45,7 @@
     [:div {:style {:background-color "#00DD77"
                    :display :flex
                    :justify-content :flex-start
+                   :margin-bottom 10
                  :height 50}
            }
      (when (#{:contact :message} current-view-id)
