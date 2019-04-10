@@ -3,7 +3,10 @@
             ["web3" :as Web3]
             ["@erebos/keccak256" :refer [pubKeyToAddress]]
             ["@erebos/secp256k1" :refer [createKeyPair sign]]
+            [re-frame.core :as rf]
             [reagent.core :as reagent]
+            [app.events :as events]
+            [app.views :as views]
             [clojure.edn :as edn]))
 
 (def web3 (Web3. "ws://127.0.0.1:8546"))
@@ -53,7 +56,8 @@
      ^{:key content}[message-view content])])
 
 (defn main! []
-  (reagent/render [home-page]
+  (rf/dispatch [:initialize-db])
+  (reagent/render [views/home-page]
                   (.getElementById js/document "app")))
 
 (def feedhash (atom nil))
@@ -62,7 +66,7 @@
 #_(defn upload-feed-value [feedhash data]
     (.then (.uploadFeedValue bzz
                              feedhash
-                             #js {"index.htlm" {:contentType "text/html"
+                             #js {"index.html" {:contentType "text/html"
                                                 :data data}}
                              #js {:defaultPath "index.html"})
            (fn [res]
